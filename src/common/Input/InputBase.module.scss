@@ -1,0 +1,13 @@
+.base {
+  background: none;
+  border: none;
+  color: var(--white);
+  letter-spacing: 0.2px;
+  line-height: 1.5rem;
+  margin: 0;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+}

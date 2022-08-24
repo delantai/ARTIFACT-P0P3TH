@@ -1,0 +1,12 @@
+.base {
+  align-items: center;
+  border: 1px solid var(--gray-dark-1);
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 1rem;
+
+  // &:focus-within {
+  //   background: var(--gray-dark-1);
+  // }
+}
