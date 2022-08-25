@@ -1,21 +1,24 @@
 // Vendor
 import classNames from 'classnames/bind';
+import { Leva } from 'leva';
 import type { NextPage } from 'next';
 import { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { Stats } from '@react-three/drei';
 import { useQuery } from '@tanstack/react-query';
 
 // Components
 import { IconVariant } from 'src/common/Icon';
 import { IconButton } from 'src/common/IconButton';
 import { InputBase, InputContainer, useInputProps } from 'src/common/Input';
+import { Canvas } from 'src/features/artifact-scene/Canvas';
 
 // Helpers
+import { AssetCards } from 'src/features/open-sea/AssetCards';
 import { InvalidInputError } from 'src/features/open-sea/errors';
 import { fetchAssets } from 'src/features/open-sea/queries';
 
 // Module
-import { AssetCards } from './AssetCards';
 import { Header } from './Header';
 import styles from './index.module.scss';
 
@@ -53,7 +56,10 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <Header />
       <main className={styles.main}>
-        <InputContainer>
+        <Canvas />
+        <Leva collapsed />
+        <Stats />
+        {/* <InputContainer>
           <InputBase
             className={cx('input')}
             onChange={handleChange}
@@ -63,7 +69,7 @@ const Home: NextPage = () => {
           <IconButton onClick={handleClick} variant={IconVariant.Search} />
         </InputContainer>
 
-        {data ? <AssetCards data={data} /> : null}
+        {data ? <AssetCards data={data} /> : null} */}
       </main>
     </div>
   );
