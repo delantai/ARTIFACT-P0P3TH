@@ -15,17 +15,28 @@ const ORDERED_STATES = [
   TransitionState.Exited,
 ];
 
-export const useTransition = () => {
-  const [stateIndex, setStateIndex] = useState<number>(3);
-  const state = ORDERED_STATES[stateIndex];
+type CallbackParam = TransitionState | ((toState?: TransitionState) => TransitionState);
 
-  // When in prop is changed, start transitioning
-  const next = useCallback((toState?: TransitionState) => {
-    if (toState) {
-      const index = ORDERED_STATES.findIndex((s) => s === toState);
-      return setStateIndex(index);
+export const useTransition = () => {
+  const [state, setState] = useState<TransitionState>(TransitionState.Exited);
+
+  const next = useCallback((toState?: CallbackParam) => {
+    // Without any arguments, next toggles to the next state
+    if (!toState) {
+      return setState((currentState) => {
+        const currentStateIndex = ORDERED_STATES.findIndex((s) => s === currentState);
+        const nextStateIndex = (currentStateIndex + 1) % ORDERED_STATES.length;
+        return ORDERED_STATES[nextStateIndex];
+      });
     }
-    return setStateIndex((index) => (index + 1) % ORDERED_STATES.length);
+
+    // If callback provided, pass in current state and resolve new state
+    if (toState instanceof Function) {
+      return setState((currentState) => toState(currentState));
+    }
+
+    // In this case the desired end state was provided
+    return setState(toState);
   }, []);
 
   return {

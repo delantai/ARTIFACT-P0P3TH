@@ -1,10 +1,14 @@
-.container {
-  padding: 0 2rem;
+@keyframes gradient {
+  0% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
 }
 
 .main {
   height: 100vh;
-  padding: 4rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -12,6 +16,37 @@
   align-items: center;
 }
 
-.input {
+.footer-bg {
+  background: linear-gradient(transparent 0%, black 80%);
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.5s ease;
+  width: 100%;
+  z-index: 0;
+}
+
+.footer-bg--active {
+  opacity: 1;
+}
+
+.footer {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  padding: 6rem;
+  width: 100%;
+  transition: padding 0.75s ease;
+}
+
+.footer--active {
+  padding: 12rem;
+}
+
+.input-container {
   width: 400px;
+  z-index: 1;
 }

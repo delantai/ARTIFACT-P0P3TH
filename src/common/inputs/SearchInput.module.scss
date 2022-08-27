@@ -1,0 +1,25 @@
+.base {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.field {
+  text-align: center;
+}
+
+.footer {
+  border-bottom: 2px solid var(--white);
+  border-radius: 4px;
+  width: 10%;
+  transition: width 1.25s ease;
+}
+
+.footer--active {
+  width: 100%;
+}

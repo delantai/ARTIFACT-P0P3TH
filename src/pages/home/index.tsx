@@ -2,15 +2,13 @@
 import classNames from 'classnames/bind';
 import { Leva } from 'leva';
 import type { NextPage } from 'next';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Stats } from '@react-three/drei';
 import { useQuery } from '@tanstack/react-query';
 
 // Components
-import { IconVariant } from 'src/common/Icon';
-import { IconButton } from 'src/common/IconButton';
-import { InputBase, InputContainer, useInputProps } from 'src/common/Input';
+import { SearchInput, useInputProps } from 'src/common/inputs';
 import { Canvas } from 'src/features/artifact-scene/Canvas';
 
 // Helpers
@@ -25,6 +23,7 @@ import styles from './index.module.scss';
 const cx = classNames.bind(styles);
 
 const Home: NextPage = () => {
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [address, handleChange] = useInputProps('0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19');
 
   // Fetch OpenSea API assets via owner address lookup
@@ -34,7 +33,16 @@ const Home: NextPage = () => {
   });
 
   // When search button is clicked, setAddress and execute the OpenSea assets query
-  const handleClick = useCallback(() => address && refetch(), [address, refetch]);
+  const handleFocus = useCallback(() => setIsInputFocused(true), []);
+  const handleBlur = useCallback(() => setIsInputFocused(false), []);
+  const handleClick = useCallback(
+    (state) => {
+      if (address) {
+        refetch();
+      }
+    },
+    [address, refetch],
+  );
 
   // Display a toast for expected errors
   useEffect(() => {
@@ -53,25 +61,28 @@ const Home: NextPage = () => {
   console.log('fetching:', isFetching);
 
   return (
-    <div className={styles.container}>
+    <>
       <Header />
-      <main className={styles.main}>
-        <Canvas />
+      <main className={cx('main')}>
+        <Canvas onClick={handleClick} />
         <Leva collapsed />
         <Stats />
-        {/* <InputContainer>
-          <InputBase
-            className={cx('input')}
+        <div className={cx('footer', { 'footer--active': isInputFocused })}>
+          <div className={cx('footer-bg', { 'footer-bg--active': isInputFocused })} />
+          <SearchInput
+            active={isInputFocused}
+            className={cx('input-container')}
+            onBlur={handleBlur}
             onChange={handleChange}
+            onFocus={handleFocus}
             placeholder="What is your ETH address?"
             value={address}
           />
-          <IconButton onClick={handleClick} variant={IconVariant.Search} />
-        </InputContainer>
+        </div>
 
-        {data ? <AssetCards data={data} /> : null} */}
+        {/* {data ? <AssetCards data={data} /> : null} */}
       </main>
-    </div>
+    </>
   );
 };
 
