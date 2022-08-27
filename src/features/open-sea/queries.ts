@@ -1,7 +1,12 @@
+// Vendor
+import { useQuery } from '@tanstack/react-query';
+
 // Helpers
+import { context } from 'src/pages/query';
 import { getUrl } from 'src/utils/url';
 
 // Module
+import { useAssetsContext } from './context';
 import { InvalidInputError } from './errors';
 import { OpenSeaAssetsResponse } from './@types';
 
@@ -18,7 +23,7 @@ interface FetchAssetsParams {
 /**
  * React-Query query function to fetch assets from OpenSea by address.
  */
-export const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAssetsResponse | null> => {
+const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAssetsResponse | null> => {
   if (!queryKey[1].address) {
     return null;
   }
@@ -46,4 +51,15 @@ export const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<Open
   }
 
   return data;
+};
+
+export const useAssetsQuery = () => {
+  const { address } = useAssetsContext();
+
+  // Fetch OpenSea API assets via owner address lookup
+  return useQuery(['open-sea-assets', { address }], fetchAssets, {
+    context, // Necessary since we specify context on provider
+    enabled: false, // Fetch data only when the button is clicked
+    retry: false, // Disable retries on failure
+  });
 };

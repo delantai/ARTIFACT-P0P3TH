@@ -18,15 +18,15 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Props) => {
-  const [active, setActive] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   // Event handlers
-  const handleActivateInput = useCallback(() => setActive(true), []);
+  const handleActivateInput = useCallback(() => setIsActive(true), []);
 
   const handleFocus = useCallback(
     (e: FocusEvent<HTMLInputElement>) => {
       onFocus?.(e);
-      setActive(true); // Input won't disappear until blur when emptying field
+      setIsActive(true); // Input won't disappear until blur when emptying field
     },
     [onFocus],
   );
@@ -34,7 +34,7 @@ export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Pro
   const handleBlur = useCallback(
     (e: FocusEvent<HTMLInputElement>) => {
       onBlur?.(e);
-      setActive(false);
+      setIsActive(false);
     },
     [onBlur],
   );
@@ -42,7 +42,7 @@ export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Pro
   return (
     <div className={cx('base', className)}>
       <div className={cx('container', className)}>
-        {active || value ? (
+        {isActive || value ? (
           <InputBase
             {...props}
             autoFocus
@@ -52,10 +52,10 @@ export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Pro
             value={value}
           />
         ) : (
-          <IconButton onClick={handleActivateInput} variant={IconVariant.Search} />
+          <IconButton className={cx('button')} onClick={handleActivateInput} variant={IconVariant.Search} />
         )}
       </div>
-      <div className={cx('footer', { 'footer--active': active })} />
+      <div className={cx('footer', { 'footer--active': isActive })} />
     </div>
   );
 };

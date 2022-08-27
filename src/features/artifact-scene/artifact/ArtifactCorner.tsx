@@ -6,17 +6,20 @@ import { animated, useSpring, easings } from '@react-spring/three';
 import { assertUnreachable } from 'src/utils/assertions';
 
 // Module
-import { Coordinates, ACTIVE_STATE, CLOSED_STATE, OPEN_STATE } from './constants';
+import { ACTIVE_STATE, CLOSED_STATE, Coordinates, FLIPPED_STATE, OPEN_STATE } from './constants';
 
 const SPRING_CONFIG = { easing: easings.easeOutQuint, tension: 200, friction: 15, precision: 0.00001 };
 
 export const enum CornerState {
   Active = 'active',
   Closed = 'closed',
+  Flipped = 'flipped',
   Open = 'open',
 }
 
 interface Props {
+  // Allows parent to control spring clamp behavior
+  clamp?: boolean;
   // Geometry loaded from glb file
   geometry: BufferGeometry;
   // Coordinate id like CubeCorner001
@@ -33,18 +36,20 @@ const getCoordinates = (state: CornerState): Coordinates => {
       return CLOSED_STATE;
     case CornerState.Open:
       return OPEN_STATE;
+    case CornerState.Flipped:
+      return FLIPPED_STATE;
     default:
       return assertUnreachable(state);
   }
 };
 
-export const ArtifactCorner = ({ geometry, id, state }: Props) => {
+export const ArtifactCorner = ({ clamp = false, geometry, id, state }: Props) => {
   const coordinates = getCoordinates(state);
 
   const { position, rotation } = useSpring({
     position: coordinates[id].position,
     rotation: coordinates[id].rotation,
-    config: SPRING_CONFIG,
+    config: { ...SPRING_CONFIG, clamp },
   });
 
   return (

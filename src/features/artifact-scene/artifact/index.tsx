@@ -1,37 +1,33 @@
 // Vendor
-import { ComponentProps, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSpring, easings } from '@react-spring/three';
-import { PresentationControls } from '@react-three/drei';
 
 // Helpers
+import { useAssetsContext } from 'src/features/open-sea/context';
+import { useAssetsQuery } from 'src/features/open-sea/queries';
 import { useTransition, TransitionState } from 'src/utils/use-transition';
 
 // Module
+import { usePrevious } from 'src/utils/use-previous';
 import { ArtifactSolid } from './ArtifactSolid';
 import { ArtifactSplit } from './ArtifactSplit';
+import { Controls } from './Controls';
 
-/**
- * Controls for making artifact spinnable on drag
- */
-const Controls = ({ children, ...props }: ComponentProps<typeof PresentationControls>) => (
-  <PresentationControls
-    config={{ mass: 1, tension: 80, friction: 12 }}
-    cursor={false}
-    speed={1.5}
-    global
-    polar={[0, 0]}
-    {...props}>
-    {children}
-  </PresentationControls>
-);
-
-interface Props {
-  onClick?: (state: TransitionState) => void;
-}
-
-export const Artifact = ({ onClick }: Props) => {
+export const Artifact = () => {
   // const [artifactState, setArtifactState] = useState<ArtifactState>(ArtifactState.Closed);
   const { isEntering, isExiting, state, next } = useTransition();
+  const { address } = useAssetsContext();
+  const prevAddress = usePrevious(address);
+  const { data, refetch } = useAssetsQuery();
+
+  // 1. Kick off search animation when clicked
+  // 2. When data arrives, animate to proper state
+  // 3. When address is removed, transition to closed state
+  useEffect(() => {
+    if (prevAddress && !address) {
+      next(TransitionState.Exiting);
+    }
+  }, [address, prevAddress, next]);
 
   // Mouse event handlers
   const handleEntering = useCallback(() => next(TransitionState.Entering), [next]);
@@ -49,54 +45,14 @@ export const Artifact = ({ onClick }: Props) => {
     [next],
   );
 
+  // Click event handlers manage search state
+  const handleToExited = useCallback(() => next(TransitionState.Exited), [next]);
   const handleClickEntered = useCallback(() => {
-    console.log('handling click entered: ', state);
-    onClick?.(TransitionState.Entered);
+    if (address) {
+      refetch();
+    }
     next(TransitionState.Entered);
-  }, [next, state]);
-
-  const handleClickExited = useCallback(() => {
-    console.log('handling click exited: ', state);
-    onClick?.(TransitionState.Exited);
-    next(TransitionState.Exited);
-  }, [next, state]);
-
-  // const handleEntering = useCallback(
-  //   () =>
-  //     next((currentValue) => {
-  //       console.log(' > to ENTERING from: ', currentValue);
-  //       return TransitionState.Entering;
-  //     }),
-  //   [next],
-  // );
-  // const handleEntered = useCallback(
-  //   // Cannot transition to Entered from Exited, this may happen because
-  //   // PresentationControls sometimes triggers onPointerOut from a simple click
-  //   () =>
-  //     next((currentState) => {
-  //       console.log(' > to ENTERED from: ', currentState);
-  //       return currentState === TransitionState.Exited ? currentState : TransitionState.Entered;
-  //     }),
-  //   [next],
-  // );
-  // const handleExiting = useCallback(
-  //   () =>
-  //     next((currentValue) => {
-  //       console.log(' > to Exiting from: ', currentValue);
-  //       return TransitionState.Exiting;
-  //     }),
-  //   [next],
-  // );
-  // const handleExited = useCallback(
-  //   // Cannot transition to Exited from Entered, this may happen because
-  //   // PresentationControls sometimes triggers onPointerOut from a simple click
-  //   () =>
-  //     next((currentState) => {
-  //       console.log(' > to Exited from: ', currentState);
-  //       return currentState === TransitionState.Entered ? currentState : TransitionState.Exited;
-  //     }),
-  //   [next],
-  // );
+  }, [address, next, refetch]);
 
   // Transition scale animation
   const { scale } = useSpring({
@@ -104,23 +60,25 @@ export const Artifact = ({ onClick }: Props) => {
     config: { easing: easings.easeOutQuint, tension: 200, friction: 15, precision: 0.00001 },
   });
 
-  return [TransitionState.Exited, TransitionState.Entering].includes(state) ? (
-    <Controls>
-      <ArtifactSolid
-        scale={scale}
-        onClick={handleClickEntered}
-        onPointerDown={handleEntering}
-        onPointerOut={handleExited} // Back to Exited if mouse leaves (on drag)
-      />
-    </Controls>
-  ) : (
-    <Controls>
-      <ArtifactSplit
-        scale={scale}
-        onClick={handleClickExited}
-        onPointerDown={handleExiting}
-        onPointerOut={handleEntered} // Back to Entered if mouse leaves (on drag)
-      />
+  return (
+    <Controls snap>
+      {[TransitionState.Exited, TransitionState.Entering].includes(state) ? (
+        <ArtifactSolid
+          scale={scale}
+          // state={state}
+          onClick={handleClickEntered}
+          onPointerDown={handleEntering}
+          onPointerOut={handleExited} // Back to Exited if mouse leaves (on drag)
+        />
+      ) : (
+        <ArtifactSplit
+          scale={scale}
+          state={state}
+          onExiting={handleToExited}
+          onPointerDown={handleExiting}
+          onPointerOut={handleEntered} // Back to Entered if mouse leaves (on drag)
+        />
+      )}
     </Controls>
   );
 };

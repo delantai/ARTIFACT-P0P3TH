@@ -38,8 +38,23 @@
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off"
-    // "semi": [2, "always"]
   },
+  "overrides": [
+    {
+      "files": ["src/**/*.tsx"],
+      "rules": {
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "extendDefaults": true,
+            "types": {
+              "{}": false
+            }
+          }
+        ]
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use

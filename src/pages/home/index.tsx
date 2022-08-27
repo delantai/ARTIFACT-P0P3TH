@@ -2,19 +2,18 @@
 import classNames from 'classnames/bind';
 import { Leva } from 'leva';
 import type { NextPage } from 'next';
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Stats } from '@react-three/drei';
-import { useQuery } from '@tanstack/react-query';
 
 // Components
-import { SearchInput, useInputProps } from 'src/common/inputs';
+import { SearchInput } from 'src/common/inputs';
 import { Canvas } from 'src/features/artifact-scene/Canvas';
 
 // Helpers
-import { AssetCards } from 'src/features/open-sea/AssetCards';
+import { useAssetsContext } from 'src/features/open-sea/context';
 import { InvalidInputError } from 'src/features/open-sea/errors';
-import { fetchAssets } from 'src/features/open-sea/queries';
+import { useAssetsQuery } from 'src/features/open-sea/queries';
 
 // Module
 import { Header } from './Header';
@@ -24,25 +23,16 @@ const cx = classNames.bind(styles);
 
 const Home: NextPage = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [address, handleChange] = useInputProps('0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19');
 
   // Fetch OpenSea API assets via owner address lookup
-  const { data, error, isFetching, refetch } = useQuery(['open-sea-assets', { address }], fetchAssets, {
-    enabled: false, // Fetch data only when the button is clicked
-    retry: false, // Disable retries on failure
-  });
+  // Test with: 0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19
+  const { address, setAddress } = useAssetsContext(); // Assets global app state
+  const { error } = useAssetsQuery();
 
   // When search button is clicked, setAddress and execute the OpenSea assets query
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setAddress?.(e.target.value), [setAddress]);
   const handleFocus = useCallback(() => setIsInputFocused(true), []);
   const handleBlur = useCallback(() => setIsInputFocused(false), []);
-  const handleClick = useCallback(
-    (state) => {
-      if (address) {
-        refetch();
-      }
-    },
-    [address, refetch],
-  );
 
   // Display a toast for expected errors
   useEffect(() => {
@@ -57,14 +47,11 @@ const Home: NextPage = () => {
     }
   }, [error]);
 
-  console.log('data: ', data);
-  console.log('fetching:', isFetching);
-
   return (
     <>
       <Header />
       <main className={cx('main')}>
-        <Canvas onClick={handleClick} />
+        <Canvas />
         <Leva collapsed />
         <Stats />
         <div className={cx('footer', { 'footer--active': isInputFocused })}>

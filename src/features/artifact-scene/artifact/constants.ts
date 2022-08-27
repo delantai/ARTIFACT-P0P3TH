@@ -15,50 +15,52 @@ export interface Coordinates {
   CubeCorner008: Coordinate;
 }
 
+// Cube at the moment never moves from original position
+const Cube: Coordinate = {
+  position: [0, 1.56, 0],
+  rotation: [0.68, -0.42, -0.46],
+};
+
+// Cube corners are hovering in ordered arrangement for interaction
 export const ACTIVE_STATE: Coordinates = {
-  Cube: {
-    position: [0, 1.56, 0],
-    rotation: [0.68, -0.42, -0.46],
-  },
+  Cube,
   CubeCorner001: {
-    position: [3.45, 1.13, -2.9],
-    rotation: [-1.78, -0.79, -2.39],
+    position: [3.65, 0.83, 2.1],
+    rotation: [-1.64, -0.85, -2.22],
   },
   CubeCorner002: {
-    position: [2.33, 3.9, -1.62],
-    rotation: [2.02, 0.18, 1.82],
+    position: [2.23, 3.9, 3.38],
+    rotation: [2.26, 0.06, 1.9],
   },
   CubeCorner003: {
-    position: [2, -0.17, -2],
-    rotation: [0.83, -0.7, 2.1],
+    position: [2.2, -0.17, 3],
+    rotation: [1.46, -0.85, 1.97],
   },
   CubeCorner004: {
-    position: [3.61, 2.7, -3.81],
-    rotation: [0.43, -0.51, 0.08],
+    position: [3.81, 2.7, 1.19],
+    rotation: [0.07, -0.35, -0.5],
   },
   CubeCorner005: {
-    position: [-2, -0.21, -1.7],
-    rotation: [2.15, -0.41, -0.52],
+    position: [-2, -0.21, 3.3],
+    rotation: [2.3, 0.18, -1.37],
   },
   CubeCorner006: {
-    position: [-3.46, 0.98, -0.89],
-    rotation: [0.64, -0.58, -1.27],
+    position: [-3.56, 0.88, 2.11],
+    rotation: [1.2, -0.73, -0.65],
   },
   CubeCorner007: {
-    position: [-2.24, 3.83, -2.5],
-    rotation: [0.34, 0.59, -2.03],
+    position: [-2.14, 4.03, 3],
+    rotation: [-0.01, 0.62, -1.95],
   },
   CubeCorner008: {
-    position: [-3.66, 2.74, -2.84],
-    rotation: [2.08, 0.09, -2.32],
+    position: [-3.76, 2.64, 1.16],
+    rotation: [1.96, 0.15, -1.93],
   },
 };
 
+// Cube corners are attached to cube body in idle state
 export const CLOSED_STATE: Coordinates = {
-  Cube: {
-    position: [0, 1.56, 0],
-    rotation: [0.68, -0.42, -0.46],
-  },
+  Cube,
   CubeCorner001: {
     position: [1.16, 1.97, 0],
     rotation: [0.68, -0.42, -0.46],
@@ -93,11 +95,46 @@ export const CLOSED_STATE: Coordinates = {
   },
 };
 
-export const OPEN_STATE: Coordinates = {
-  Cube: {
-    position: [0, 1.56, 0],
-    rotation: [0.68, -0.42, -0.46],
+// Cube corners are flipped towards camera for viewing
+export const FLIPPED_STATE: Coordinates = {
+  Cube,
+  CubeCorner001: {
+    position: [3.65, 0.83, 1.9],
+    rotation: [1.13, -0.85, -2.22],
   },
+  CubeCorner002: {
+    position: [2.23, 3.9, 3.28],
+    rotation: [-0.77, 0.26, 1.7],
+  },
+  CubeCorner003: {
+    position: [2, -0.17, 3.1],
+    rotation: [2.79, -1.4, 0.22],
+  },
+  CubeCorner004: {
+    position: [3.81, 2.7, 1.09],
+    rotation: [-2.98, -0.35, -0.5],
+  },
+  CubeCorner005: {
+    position: [-2, -0.21, 3.2],
+    rotation: [-0.84, 0.18, -1.37],
+  },
+  CubeCorner006: {
+    position: [-3.56, 0.78, 2.01],
+    rotation: [-1.77, -0.73, -0.65],
+  },
+  CubeCorner007: {
+    position: [-2.14, 3.73, 3.3],
+    rotation: [-2.26, 0.62, -1.95],
+  },
+  CubeCorner008: {
+    position: [-3.76, 2.54, 1.16],
+    rotation: [-0.98, 0.15, -1.93],
+  },
+};
+
+//
+export const OPEN_STATE: Coordinates = {
+  Cube,
   CubeCorner001: {
     position: [2.75, 2.53, 0],
     rotation: [0.68, -0.42, -0.46],

@@ -1,32 +1,23 @@
+// Vendor
 import type { AppProps } from 'next/app';
-import toast, { Toaster } from 'react-hot-toast';
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
+import { QueryClientProvider } from '@tanstack/react-query';
 
+// Helpers
+import { AssetsProvider } from 'src/features/open-sea/context';
 import 'src/styles/globals.scss';
 
-const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      if (error instanceof Error && query.state.data !== undefined) {
-        // Only show toasts if data already exists in the cache,
-        // which indicates a failed background update.
-        toast.error(`Oops, mistakes were made: ${error.message}`, {
-          style: {
-            background: '#2f3236',
-            borderRadius: '8px',
-            color: '#f4f6f7',
-          },
-        });
-      }
-    },
-  }),
-});
+// Module
+import { context, queryClient } from './query';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  // Set custom context so that we may pass it through ContextBridge in Canvas
   return (
-    <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <Component {...pageProps} />
+    <QueryClientProvider client={queryClient} context={context}>
+      <AssetsProvider>
+        <Toaster />
+        <Component {...pageProps} />
+      </AssetsProvider>
     </QueryClientProvider>
   );
 }
