@@ -1,14 +1,15 @@
 // Vendor
-import { ComponentProps } from 'react';
 import { Canvas as FiberCanvas } from '@react-three/fiber';
 import { ContactShadows, PerspectiveCamera, OrbitControls, useContextBridge } from '@react-three/drei';
 
 // Helpers
-import { context as QueryContext } from 'src/pages/query';
+import { Artifact } from 'src/features/artifact';
+import { ArtifactContext } from 'src/features/artifact/context';
 import { AssetsContext } from 'src/features/open-sea/context';
+import { context as QueryContext } from 'src/pages/query';
 
 // Module
-import { Artifact } from './artifact';
+import { Camera } from './Camera';
 import { Effects } from './Effects';
 import { Environment } from './Environment';
 
@@ -20,20 +21,19 @@ import { Environment } from './Environment';
  * The Canvas houses our artifact scene
  *
  * TODOS:
- *   - Camera movement following mouse
- *   - Ground plate
- *   - Env particle effects
- *   - Spinning dust particle effects
- *   - Search animation
- *   - Resting animation
- *   - Animated shader for frosted glass cube with glow
+ *   - NFT modal
  *   - Pagination controls
+ *   - Add sound effect
+ *   - Add wobble on corner click
+ *   - FIX flicker on texture load
+ *   - Env particle effects
+ *   - Animated shader for frosted glass cube with glow
  *   - Cast shadows from artifact corners
  */
 export const Canvas = () => {
   // Necessary since there are issues passing context between two renderers
   // https://docs.pmnd.rs/react-three-fiber/advanced/gotchas#consuming-context-from-a-foreign-provider
-  const ContextBridge = useContextBridge(AssetsContext, QueryContext);
+  const ContextBridge = useContextBridge(ArtifactContext, AssetsContext, QueryContext);
 
   return (
     <FiberCanvas
@@ -43,13 +43,7 @@ export const Canvas = () => {
       <ContextBridge>
         <color attach="background" args={['#12181d']} />
         <Artifact />
-        <PerspectiveCamera
-          aspect={16 / 9}
-          fov={25}
-          makeDefault
-          position={[0, 3, 20]}
-          rotation={[-Math.PI / 32, 0, 0]}
-        />
+        <Camera />
         <hemisphereLight intensity={0.5} />
         <ContactShadows
           resolution={1024}
@@ -60,17 +54,9 @@ export const Canvas = () => {
           opacity={1}
           far={20}
         />
-        {/* <mesh scale={4} position={[3, -1.161, -1.5]} rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}>
-        <ringGeometry args={[0.9, 1, 4, 1]} />
-        <meshStandardMaterial color="white" roughness={0.75} />
-      </mesh>
-      <mesh scale={4} position={[-3, -1.161, -1]} rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}>
-        <ringGeometry args={[0.9, 1, 3, 1]} />
-        <meshStandardMaterial color="white" roughness={0.75} />
-      </mesh> */}
         <Environment />
         <Effects />
-        {/* <OrbitControls enablePan={false} enableZoom={false} minPolarAngle={Math.PI / 2.2} maxPolarAngle={Math.PI / 2.2} /> */}
+        {/* <OrbitControls enablePan={false} enableZoom minPolarAngle={Math.PI / 2.2} maxPolarAngle={Math.PI / 2.2} /> */}
       </ContextBridge>
     </FiberCanvas>
   );

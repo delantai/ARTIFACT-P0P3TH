@@ -1,6 +1,7 @@
 // Vendor
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSpring, easings } from '@react-spring/three';
+import { useTexture } from '@react-three/drei';
 
 // Helpers
 import { useAssetsContext } from 'src/features/open-sea/context';
@@ -14,20 +15,27 @@ import { ArtifactSplit } from './ArtifactSplit';
 import { Controls } from './Controls';
 
 export const Artifact = () => {
-  // const [artifactState, setArtifactState] = useState<ArtifactState>(ArtifactState.Closed);
   const { isEntering, isExiting, state, next } = useTransition();
   const { address } = useAssetsContext();
   const prevAddress = usePrevious(address);
-  const { data, refetch } = useAssetsQuery();
+  const { refetch } = useAssetsQuery();
 
-  // 1. Kick off search animation when clicked
-  // 2. When data arrives, animate to proper state
-  // 3. When address is removed, transition to closed state
+  // This causes a black flicker when being called from ArtifactCorner,
+  // so for now, load it on first mount.
+  useTexture('/assets/images/placeholder.jpg');
+
+  // Transitioning state scales animation on down press
+  const { scale } = useSpring({
+    scale: isEntering || isExiting ? 0.75 : 1,
+    config: { easing: easings.easeOutQuint, tension: 200, friction: 15, precision: 0.00001 },
+  });
+
+  // When address is changed in open state, transition to closed state
   useEffect(() => {
-    if (prevAddress && !address) {
+    if (prevAddress !== address && state === TransitionState.Entered) {
       next(TransitionState.Exiting);
     }
-  }, [address, prevAddress, next]);
+  }, [address, prevAddress, next, state]);
 
   // Mouse event handlers
   const handleEntering = useCallback(() => next(TransitionState.Entering), [next]);
@@ -45,8 +53,7 @@ export const Artifact = () => {
     [next],
   );
 
-  // Click event handlers manage search state
-  const handleToExited = useCallback(() => next(TransitionState.Exited), [next]);
+  // Kick off search animation when clicked
   const handleClickEntered = useCallback(() => {
     if (address) {
       refetch();
@@ -54,11 +61,8 @@ export const Artifact = () => {
     next(TransitionState.Entered);
   }, [address, next, refetch]);
 
-  // Transition scale animation
-  const { scale } = useSpring({
-    scale: isEntering || isExiting ? 0.75 : 1,
-    config: { easing: easings.easeOutQuint, tension: 200, friction: 15, precision: 0.00001 },
-  });
+  // Transition back to cube state after closing animations finish
+  const handleToExited = useCallback(() => next(TransitionState.Exited), [next]);
 
   return (
     <Controls snap>

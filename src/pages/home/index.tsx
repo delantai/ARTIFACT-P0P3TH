@@ -1,14 +1,15 @@
 // Vendor
 import classNames from 'classnames/bind';
 import { Leva } from 'leva';
+import { debounce } from 'lodash';
 import type { NextPage } from 'next';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Stats } from '@react-three/drei';
 
 // Components
 import { SearchInput } from 'src/common/inputs';
-import { Canvas } from 'src/features/artifact-scene/Canvas';
+import { Canvas } from 'src/features/scene/Canvas';
 
 // Helpers
 import { useAssetsContext } from 'src/features/open-sea/context';
@@ -26,11 +27,14 @@ const Home: NextPage = () => {
 
   // Fetch OpenSea API assets via owner address lookup
   // Test with: 0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19
-  const { address, setAddress } = useAssetsContext(); // Assets global app state
+  const { setAddress } = useAssetsContext(); // Assets global app state
   const { error } = useAssetsQuery();
 
   // When search button is clicked, setAddress and execute the OpenSea assets query
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setAddress?.(e.target.value), [setAddress]);
+  const handleChange = useMemo(
+    () => debounce((e: ChangeEvent<HTMLInputElement>) => setAddress?.(e.target.value), 500, { leading: true }),
+    [setAddress],
+  );
   const handleFocus = useCallback(() => setIsInputFocused(true), []);
   const handleBlur = useCallback(() => setIsInputFocused(false), []);
 
@@ -54,6 +58,10 @@ const Home: NextPage = () => {
         <Canvas />
         <Leva collapsed />
         <Stats />
+        <div className={cx('title-container')}>
+          <h2>ARTIFACT</h2>
+          <h1>POPETH</h1>
+        </div>
         <div className={cx('footer', { 'footer--active': isInputFocused })}>
           <div className={cx('footer-bg', { 'footer-bg--active': isInputFocused })} />
           <SearchInput
@@ -63,11 +71,8 @@ const Home: NextPage = () => {
             onChange={handleChange}
             onFocus={handleFocus}
             placeholder="What is your ETH address?"
-            value={address}
           />
         </div>
-
-        {/* {data ? <AssetCards data={data} /> : null} */}
       </main>
     </>
   );

@@ -1,6 +1,6 @@
 // Vendor
 import classNames from 'classnames/bind';
-import { FocusEvent, InputHTMLAttributes, useCallback, useState } from 'react';
+import { ChangeEvent, FocusEvent, InputHTMLAttributes, useCallback, useState } from 'react';
 
 // Components
 import { IconVariant } from 'src/common/Icon';
@@ -17,8 +17,18 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   active: boolean;
 }
 
-export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Props) => {
+export const SearchInput = ({ className, onBlur, onChange, onFocus, ...props }: Props) => {
   const [isActive, setIsActive] = useState(false);
+  const [value, setValue] = useState<string>();
+
+  // Track value internally to manage blur behavior when text exists.
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+      onChange?.(e);
+    },
+    [onChange],
+  );
 
   // Event handlers
   const handleActivateInput = useCallback(() => setIsActive(true), []);
@@ -48,8 +58,8 @@ export const SearchInput = ({ className, onBlur, onFocus, value, ...props }: Pro
             autoFocus
             className={cx('field')}
             onBlur={handleBlur}
+            onChange={handleChange}
             onFocus={handleFocus}
-            value={value}
           />
         ) : (
           <IconButton className={cx('button')} onClick={handleActivateInput} variant={IconVariant.Search} />

@@ -1,9 +1,28 @@
-@keyframes gradient {
+@keyframes fadein {
   0% {
-    background-position: 50% 100%;
+    opacity: 0;
   }
   100% {
-    background-position: 50% 0%;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes hide {
+  99% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
   }
 }
 
@@ -14,6 +33,35 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.title-container {
+  // Make titles go away (after animations) so they dont block mouse events
+  animation: ease-out 13s 1 hide;
+  animation-fill-mode: forwards;
+  font-family: 'Anurati', sans-serif;
+  position: absolute;
+  top: 6rem;
+  left: 8rem;
+
+  & h2 {
+    animation: 2s ease-in 2s 1 fadein, 6s ease-out 6s 1 fadeout;
+    animation-fill-mode: forwards;
+    font-size: 4rem;
+    letter-spacing: 1rem;
+    margin: 0;
+    opacity: 0;
+  }
+
+  & h1 {
+    // delayed 0.5s behind h2
+    animation: 2s ease-out 3s 1 fadein, 6s ease-out 7s 1 fadeout;
+    animation-fill-mode: forwards;
+    font-size: 8rem;
+    letter-spacing: 2rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0;
+  }
 }
 
 .footer-bg {
@@ -47,6 +95,6 @@
 }
 
 .input-container {
-  width: 400px;
+  width: 480px;
   z-index: 1;
 }

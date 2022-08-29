@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 // Helpers
+import { ArtifactProvider } from 'src/features/artifact/context';
 import { AssetsProvider } from 'src/features/open-sea/context';
 import 'src/styles/globals.scss';
 
@@ -15,8 +16,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient} context={context}>
       <AssetsProvider>
-        <Toaster />
-        <Component {...pageProps} />
+        <ArtifactProvider>
+          <Toaster />
+          <Component {...pageProps} />
+        </ArtifactProvider>
       </AssetsProvider>
     </QueryClientProvider>
   );

@@ -1,10 +1,9 @@
-interface Coordinate {
+export interface Coordinate {
   position: [number, number, number];
   rotation: [number, number, number];
 }
 
 export interface Coordinates {
-  Cube: Coordinate;
   CubeCorner001: Coordinate;
   CubeCorner002: Coordinate;
   CubeCorner003: Coordinate;
@@ -16,14 +15,13 @@ export interface Coordinates {
 }
 
 // Cube at the moment never moves from original position
-const Cube: Coordinate = {
+export const CUBE_LOC: Coordinate = {
   position: [0, 1.56, 0],
   rotation: [0.68, -0.42, -0.46],
 };
 
 // Cube corners are hovering in ordered arrangement for interaction
-export const ACTIVE_STATE: Coordinates = {
-  Cube,
+export const ACTIVE_LOC: Coordinates = {
   CubeCorner001: {
     position: [3.65, 0.83, 2.1],
     rotation: [-1.64, -0.85, -2.22],
@@ -59,8 +57,7 @@ export const ACTIVE_STATE: Coordinates = {
 };
 
 // Cube corners are attached to cube body in idle state
-export const CLOSED_STATE: Coordinates = {
-  Cube,
+export const CLOSED_LOC: Coordinates = {
   CubeCorner001: {
     position: [1.16, 1.97, 0],
     rotation: [0.68, -0.42, -0.46],
@@ -96,8 +93,7 @@ export const CLOSED_STATE: Coordinates = {
 };
 
 // Cube corners are flipped towards camera for viewing
-export const FLIPPED_STATE: Coordinates = {
-  Cube,
+export const FLIPPED_LOC: Coordinates = {
   CubeCorner001: {
     position: [3.65, 0.83, 1.9],
     rotation: [1.13, -0.85, -2.22],
@@ -132,9 +128,45 @@ export const FLIPPED_STATE: Coordinates = {
   },
 };
 
-//
-export const OPEN_STATE: Coordinates = {
-  Cube,
+// Panel coordinates, which honestly probably could've been avoided if I modeled
+// 007 and 008 correctly...
+export const PANEL_LOC: Coordinates = {
+  CubeCorner001: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner002: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner003: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner004: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner005: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner006: {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner007: {
+    position: [0.12, 0.12, -0.12],
+    rotation: [0, 0, 0],
+  },
+  CubeCorner008: {
+    position: [0.12, 0.12, 0.12],
+    rotation: [0, 0, 0],
+  },
+};
+
+// Cube corners are hovering in random state without results data
+export const OPEN_LOC: Coordinates = {
   CubeCorner001: {
     position: [2.75, 2.53, 0],
     rotation: [0.68, -0.42, -0.46],
