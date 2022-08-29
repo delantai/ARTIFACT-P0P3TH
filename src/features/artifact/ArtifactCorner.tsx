@@ -77,7 +77,7 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
   const seed = useRef(Math.random()).current;
 
   // Load in img textures
-  const nftMap = useTexture(data?.image_url ?? '/assets/images/placeholder.jpg');
+  const nftMap = useTexture(data?.imageUrl ?? '/assets/images/placeholder.jpg');
   useEffect(() => {
     // Threejs horizontally flips textures manually loaded into a glb geometry
     // TODO: position images better to handle different aspect ratios
