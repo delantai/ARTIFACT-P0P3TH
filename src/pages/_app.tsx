@@ -7,9 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ArtifactProvider } from 'src/features/artifact/context';
 import { AssetsProvider } from 'src/features/open-sea/context';
 import 'src/styles/globals.scss';
-
-// Module
-import { context, queryClient } from './query';
+import { context, queryClient } from 'src/utils/query-client';
 
 function MyApp({ Component, pageProps }: AppProps) {
   // Set custom context so that we may pass it through ContextBridge in Canvas
