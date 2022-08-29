@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { ButtonHTMLAttributes, ComponentProps } from 'react';
 
 // Components
-import { Icon } from 'src/common/Icon';
+import { Icon } from 'src/common/icons';
 
 // Module
 import styles from './index.module.scss';

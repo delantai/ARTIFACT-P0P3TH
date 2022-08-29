@@ -3,8 +3,8 @@ import classNames from 'classnames/bind';
 import { ChangeEvent, FocusEvent, InputHTMLAttributes, useCallback, useState } from 'react';
 
 // Components
-import { IconVariant } from 'src/common/Icon';
-import { IconButton } from 'src/common/IconButton';
+import { IconVariant } from 'src/common/icons';
+import { IconButton } from 'src/common/icon-button';
 
 // Module
 import { InputBase } from './InputBase';
