@@ -1,11 +1,12 @@
 import { useLoader } from '@react-three/fiber';
 import { EffectComposer, SSR, Bloom, LUT } from '@react-three/postprocessing';
+import { Texture } from 'three';
 import { useControls } from 'leva';
 import { LUTCubeLoader } from 'postprocessing';
 
 export const Effects = () => {
   // LUT baked env
-  const texture = useLoader(LUTCubeLoader, '/assets/threejs/F-6800-STD.cube');
+  const texture: Texture = useLoader(LUTCubeLoader, '/assets/threejs/F-6800-STD.cube');
 
   const { enabled, ...props } = useControls({
     enabled: true,
