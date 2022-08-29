@@ -6,7 +6,6 @@ import type { NextPage } from 'next';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Stats } from '@react-three/drei';
 
 // Components
 import { SearchInput } from 'src/common/inputs';
@@ -61,7 +60,6 @@ const Home: NextPage = () => {
       <main className={cx('main')}>
         <Canvas />
         <Leva collapsed hidden />
-        {/* <Stats /> */}
         <div className={cx('title-container')}>
           <h2>ARTIFACT</h2>
           <h1>POPETH</h1>
