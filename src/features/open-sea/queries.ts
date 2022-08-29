@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 // Helpers
-import { context } from 'src/pages/query';
+import { context } from 'src/utils/query-client';
 import { getUrl } from 'src/utils/url';
 
 // Module

@@ -6,7 +6,7 @@ import { ContactShadows, useContextBridge } from '@react-three/drei';
 import { Artifact } from 'src/features/artifact';
 import { ArtifactContext } from 'src/features/artifact/context';
 import { AssetsContext } from 'src/features/open-sea/context';
-import { context as QueryContext } from 'src/pages/query';
+import { context as QueryContext } from 'src/utils/query-client';
 
 // Module
 import { Camera } from './Camera';
