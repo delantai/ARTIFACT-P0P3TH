@@ -1,6 +1,6 @@
 // Vendor
 import { Canvas as FiberCanvas } from '@react-three/fiber';
-import { ContactShadows, PerspectiveCamera, OrbitControls, useContextBridge } from '@react-three/drei';
+import { ContactShadows, useContextBridge } from '@react-three/drei';
 
 // Helpers
 import { Artifact } from 'src/features/artifact';
@@ -13,19 +13,15 @@ import { Camera } from './Camera';
 import { Effects } from './Effects';
 import { Environment } from './Environment';
 
-// interface Props {
-//   onClick?: ComponentProps<typeof Artifact>['onClick'];
-// }
-
 /**
  * The Canvas houses our artifact scene
  *
  * TODOS:
- *   - NFT modal
+ *   - Zoom out a little on input focus
+ *   - FIX flicker on texture load
  *   - Pagination controls
  *   - Add sound effect
  *   - Add wobble on corner click
- *   - FIX flicker on texture load
  *   - Env particle effects
  *   - Animated shader for frosted glass cube with glow
  *   - Cast shadows from artifact corners
@@ -36,10 +32,7 @@ export const Canvas = () => {
   const ContextBridge = useContextBridge(ArtifactContext, AssetsContext, QueryContext);
 
   return (
-    <FiberCanvas
-      // camera={{ position: [0, 10, 15], fov: 25 }}
-      gl={{ logarithmicDepthBuffer: true, antialias: false }}
-      dpr={[1, 1.5]}>
+    <FiberCanvas gl={{ logarithmicDepthBuffer: true, antialias: false }} dpr={[1, 1.5]}>
       <ContextBridge>
         <color attach="background" args={['#12181d']} />
         <Artifact />
@@ -56,7 +49,6 @@ export const Canvas = () => {
         />
         <Environment />
         <Effects />
-        {/* <OrbitControls enablePan={false} enableZoom minPolarAngle={Math.PI / 2.2} maxPolarAngle={Math.PI / 2.2} /> */}
       </ContextBridge>
     </FiberCanvas>
   );

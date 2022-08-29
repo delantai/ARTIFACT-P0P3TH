@@ -6,6 +6,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 // Helpers
+import { useAnimBobbing } from 'src/utils/threejs/use-anim-bobbing';
 import { DreiGLTF } from 'src/@types';
 
 // Module
@@ -20,16 +21,8 @@ export const ArtifactSolid = ({ ...props }: Props) => {
   const { nodes } = useGLTF(ASSET_PATH) as DreiGLTF;
 
   // Add resting animation
-  useFrame(({ clock }) => {
-    if (cubeRef.current) {
-      const t = clock.getElapsedTime();
-      cubeRef.current.position.y = THREE.MathUtils.lerp(
-        cubeRef.current.position.y,
-        CUBE_LOC.position[1] + Math.sin(t) / 5,
-        0.01,
-      );
-    }
-  });
+  const bobbing = useAnimBobbing({ origin: CUBE_LOC.position, ref: cubeRef });
+  useFrame(bobbing);
 
   return (
     <animated.group {...props} dispose={null}>

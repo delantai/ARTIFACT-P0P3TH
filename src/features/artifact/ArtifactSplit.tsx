@@ -9,6 +9,7 @@ import { useFrame } from '@react-three/fiber';
 import { DreiGLTF } from 'src/@types';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
 import { OpenSeaAsset } from 'src/features/open-sea/@types';
+import { useAnimBobbing } from 'src/utils/threejs/use-anim-bobbing';
 import { usePrevious } from 'src/utils/use-previous';
 import { TransitionState } from 'src/utils/use-transition';
 
@@ -68,22 +69,11 @@ export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props
   }, [onExiting, prevState, state]);
 
   // 4. Add resting animation
-  useFrame(({ clock }) => {
-    if (cubeRef.current) {
-      const t = clock.getElapsedTime();
-      cubeRef.current.position.y = THREE.MathUtils.lerp(
-        cubeRef.current.position.y,
-        CUBE_LOC.position[1] + Math.sin(t) / 5,
-        0.01,
-      );
-    }
-  });
+  const bobbing = useAnimBobbing({ origin: CUBE_LOC.position, ref: cubeRef });
+  useFrame(bobbing);
 
   // NOTE: data is mapped according to GLB file geometry so that they have the correct order
   return (
-    // react-spring + R3F need typings to be better defined
-    // https://github.com/pmndrs/react-spring/issues/1302#issuecomment-840816845
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <animated.group {...props} dispose={null} scale={scale}>
       <animated.mesh
         ref={cubeRef}

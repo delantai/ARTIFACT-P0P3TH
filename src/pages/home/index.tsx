@@ -5,13 +5,16 @@ import { debounce } from 'lodash';
 import type { NextPage } from 'next';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import * as Dialog from '@radix-ui/react-dialog';
 import { Stats } from '@react-three/drei';
 
 // Components
 import { SearchInput } from 'src/common/inputs';
+import { ArtifactDialogContent } from 'src/features/artifact-dialog';
 import { Canvas } from 'src/features/scene/Canvas';
 
 // Helpers
+import { useArtifactContext } from 'src/features/artifact/context';
 import { useAssetsContext } from 'src/features/open-sea/context';
 import { InvalidInputError } from 'src/features/open-sea/errors';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
@@ -24,6 +27,7 @@ const cx = classNames.bind(styles);
 
 const Home: NextPage = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const { focusedCorner } = useArtifactContext();
 
   // Fetch OpenSea API assets via owner address lookup
   // Test with: 0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19
@@ -56,8 +60,8 @@ const Home: NextPage = () => {
       <Header />
       <main className={cx('main')}>
         <Canvas />
-        <Leva collapsed />
-        <Stats />
+        <Leva collapsed hidden />
+        {/* <Stats /> */}
         <div className={cx('title-container')}>
           <h2>ARTIFACT</h2>
           <h1>POPETH</h1>
@@ -73,6 +77,9 @@ const Home: NextPage = () => {
             placeholder="What is your ETH address?"
           />
         </div>
+        <Dialog.Root open={!!focusedCorner}>
+          <ArtifactDialogContent tokenId={focusedCorner?.tokenId} />
+        </Dialog.Root>
       </main>
     </>
   );

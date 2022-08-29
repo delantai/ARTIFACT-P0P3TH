@@ -115,16 +115,16 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
 
   // Clicking a corner should wobble it or flip it, depending on state
   const handleClick = useCallback(() => {
-    if (state === CornerState.Active) {
+    if (state === CornerState.Active && data) {
       // Toggle flipped by setting id and position (used for camera controls)
       setFocusedCorner((currentCorner) =>
-        currentCorner?.id === id ? null : { id, position: FLIPPED_LOC[id].position },
+        currentCorner?.id === id ? null : { id, position: FLIPPED_LOC[id].position, tokenId: data.tokenId },
       );
     } else if (state === CornerState.Open) {
       // TODO: Add wobble
       // springRef.start({});
     }
-  }, [id, setFocusedCorner, state]);
+  }, [data, id, setFocusedCorner, state]);
 
   return (
     // react-spring + R3F need typings to be better defined

@@ -1,0 +1,37 @@
+// This dialog base can be generalized for a consistent dialog component
+.base {
+  position: fixed;
+  height: fit-content;
+  width: 100%;
+  max-width: 640px;
+  padding: 3rem 2.5rem 3rem 2.5rem;
+  background-color: rgba(13, 19, 24, 0.5);
+  border-radius: 2.5rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(0, -50%);
+}
+
+.image {
+  border-radius: 1.5rem;
+}
+
+.header-row {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.header-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 1rem;
+
+  & h4 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  & h1 {
+    margin: 0;
+  }
+}

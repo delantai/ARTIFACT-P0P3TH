@@ -7,6 +7,7 @@ import { Coordinates } from './constants';
 interface CornerData {
   id: keyof Coordinates;
   position: [number, number, number];
+  tokenId: string;
 }
 
 interface ContextParams {

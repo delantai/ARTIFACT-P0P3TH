@@ -8,7 +8,7 @@ import { getUrl } from 'src/utils/url';
 // Module
 import { useAssetsContext } from './context';
 import { InvalidInputError } from './errors';
-import { OpenSeaAssetsResponse } from './@types';
+import { OpenSeaAssets, OpenSeaAssetsResponse } from './@types';
 
 const isAssetsResponse = (data: unknown): data is OpenSeaAssetsResponse =>
   typeof data === 'object' &&
@@ -23,7 +23,7 @@ interface FetchAssetsParams {
 /**
  * React-Query query function to fetch assets from OpenSea by address.
  */
-const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAssetsResponse | null> => {
+const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAssets | null> => {
   if (!queryKey[1].address) {
     return null;
   }
@@ -50,7 +50,14 @@ const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAsse
     throw new Error('Unexpected response...');
   }
 
-  return data;
+  return {
+    ...data,
+    assets: data.assets.map((asset) => ({
+      ...asset,
+      imageUrl: asset.image_url,
+      tokenId: asset.token_id,
+    })),
+  };
 };
 
 export const useAssetsQuery = () => {
@@ -62,4 +69,9 @@ export const useAssetsQuery = () => {
     enabled: false, // Fetch data only when the button is clicked
     retry: false, // Disable retries on failure
   });
+};
+
+export const useAsset = (tokenId?: string) => {
+  const { data } = useAssetsQuery();
+  return (tokenId && data?.assets.find((asset) => asset.tokenId === tokenId)) || null;
 };
