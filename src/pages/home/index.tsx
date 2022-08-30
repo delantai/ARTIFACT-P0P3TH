@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import { Leva } from 'leva';
 import { debounce } from 'lodash';
 import type { NextPage } from 'next';
+import Head from 'next/head';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -19,7 +20,6 @@ import { InvalidInputError } from 'src/features/open-sea/errors';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
 
 // Module
-import { Header } from './Header';
 import styles from './index.module.scss';
 
 const cx = classNames.bind(styles);
@@ -56,7 +56,11 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Header />
+      <Head>
+        <title>Artifact: P0P3TH</title>
+        <meta name="description" content="Mysterious cube artifact (SN: P0P3TH)" />
+        <link rel="icon" href="/assets/favicon.ico" />
+      </Head>
       <main className={cx('main')}>
         <Canvas />
         <Leva collapsed hidden />
