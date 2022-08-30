@@ -1,25 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ARTIFACT P0P3TH
+
+A recent deep dive into the metaverse has produced a new artifact (SN: P0P3TH). Help us discover how it works:
+
+https://artifact-p0p3th.vercel.app/
+
+(test address: `0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19`)
+
+Currently awaiting approval from OpenSea, so for now only Rinkeby API Testnets addresses work.
+
+This project presented me the opportunity to explore something I've been curious about for a while: building an interactive 3D asset within a simple web app. I was impressed with the [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) library, and ended up learning about some of the capabilities of WebGL + ThreeJS + Fiber through this experiment. Hope you enjoy!
+
+| artifact concept                                     | shitty scribbles                                 |
+| ---------------------------------------------------- | ------------------------------------------------ |
+| ![artifact concept](https://i.imgur.com/7xzwuni.jpg) | ![data display](https://i.imgur.com/c6r2dYs.jpg) |
+
+| idle                                     | open                                      |
+| ---------------------------------------- | ----------------------------------------- |
+| ![idle](https://i.imgur.com/3WhAxfg.png) | ![Imgur](https://i.imgur.com/E0Lbx7N.png) |
+
+| active                                    | focused                                   |
+| ----------------------------------------- | ----------------------------------------- |
+| ![Imgur](https://i.imgur.com/xPzRRBK.png) | ![Imgur](https://i.imgur.com/mLoNWFt.png) |
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
+yarn install
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
