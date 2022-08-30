@@ -1,4 +1,5 @@
 // Vendor
+import * as THREE from 'three';
 import { Canvas as FiberCanvas } from '@react-three/fiber';
 import { ContactShadows, useContextBridge } from '@react-three/drei';
 
@@ -13,6 +14,9 @@ import { Camera } from './Camera';
 import { Effects } from './Effects';
 import { Environment } from './Environment';
 
+// Enable THREE cache for textures
+THREE.Cache.enabled = true;
+
 /**
  * The Canvas houses our artifact scene
  *
@@ -22,7 +26,6 @@ import { Environment } from './Environment';
  *   - Add wobble on corner click
  *   - Env particle effects
  *   - Animated shader for frosted glass cube with glow
- *   - Cast shadows from artifact corners
  */
 export const Canvas = () => {
   // Necessary since there are issues passing context between two renderers
@@ -36,15 +39,7 @@ export const Canvas = () => {
         <Artifact />
         <Camera />
         <hemisphereLight intensity={0.5} />
-        <ContactShadows
-          resolution={1024}
-          frames={1}
-          position={[0, -1.16, 0]}
-          scale={15}
-          blur={0.5}
-          opacity={1}
-          far={20}
-        />
+        <ContactShadows resolution={1024} position={[0, -1.16, 0]} scale={15} blur={0.5} opacity={1} far={20} />
         <Environment />
         <Effects />
       </ContextBridge>
