@@ -44,7 +44,7 @@ export const Effects = () => {
   return enabled ? (
     <EffectComposer disableNormalPass>
       <SSR {...props} />
-      <Bloom luminanceThreshold={0.2} mipmapBlur luminanceSmoothing={0} intensity={1.75} />
+      <Bloom intensity={1.75} luminanceSmoothing={0} luminanceThreshold={0.2} mipmapBlur />
       <LUT lut={texture} />
     </EffectComposer>
   ) : null;

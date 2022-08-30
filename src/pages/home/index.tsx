@@ -4,7 +4,7 @@ import { Leva } from 'leva';
 import { debounce } from 'lodash';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import * as Dialog from '@radix-ui/react-dialog';
 
@@ -25,12 +25,11 @@ import styles from './index.module.scss';
 const cx = classNames.bind(styles);
 
 const Home: NextPage = () => {
-  const [isInputFocused, setIsInputFocused] = useState(false);
   const { focusedCorner } = useArtifactContext();
 
   // Fetch OpenSea API assets via owner address lookup
   // Test with: 0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19
-  const { setAddress } = useAssetsContext(); // Assets global app state
+  const { isInputFocused, setAddress, setIsInputFocused } = useAssetsContext(); // Assets global app state
   const { error } = useAssetsQuery();
 
   // When search button is clicked, setAddress and execute the OpenSea assets query
@@ -38,8 +37,8 @@ const Home: NextPage = () => {
     () => debounce((e: ChangeEvent<HTMLInputElement>) => setAddress?.(e.target.value), 500, { leading: true }),
     [setAddress],
   );
-  const handleFocus = useCallback(() => setIsInputFocused(true), []);
-  const handleBlur = useCallback(() => setIsInputFocused(false), []);
+  const handleFocus = useCallback(() => setIsInputFocused(true), [setIsInputFocused]);
+  const handleBlur = useCallback(() => setIsInputFocused(false), [setIsInputFocused]);
 
   // Display a toast for expected errors
   useEffect(() => {
@@ -80,7 +79,7 @@ const Home: NextPage = () => {
           />
         </div>
         <Dialog.Root open={!!focusedCorner}>
-          <ArtifactDialogContent tokenId={focusedCorner?.tokenId} />
+          <ArtifactDialogContent open={!!focusedCorner} tokenId={focusedCorner?.tokenId} />
         </Dialog.Root>
       </main>
     </>

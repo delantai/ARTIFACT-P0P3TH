@@ -4,8 +4,12 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 interface ContextParams {
   // Address of ETH owner currently being queried
   address?: string;
-  // Set state function
+  // Search bar focus state
+  isInputFocused: boolean;
+  // Set address value
   setAddress: Dispatch<SetStateAction<string | undefined>>;
+  // Set search bar focus state
+  setIsInputFocused: Dispatch<SetStateAction<boolean>>;
   // TODO: Add pagination data
 }
 
@@ -13,12 +17,15 @@ export const AssetsContext = createContext<ContextParams | undefined>(undefined)
 
 export const AssetsProvider = ({ children }: PropsWithChildren<{}>) => {
   const [address, setAddress] = useState<string>();
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const value = useMemo(
     () => ({
       address,
+      isInputFocused,
       setAddress,
+      setIsInputFocused,
     }),
-    [address],
+    [address, isInputFocused],
   );
 
   return <AssetsContext.Provider value={value}>{children}</AssetsContext.Provider>;

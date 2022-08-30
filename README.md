@@ -14,13 +14,17 @@ This project presented me the opportunity to explore something I've been curious
 | ---------------------------------------------------- | ------------------------------------------------ |
 | ![artifact concept](https://i.imgur.com/7xzwuni.jpg) | ![data display](https://i.imgur.com/c6r2dYs.jpg) |
 
-| idle                                     | open                                      |
-| ---------------------------------------- | ----------------------------------------- |
-| ![idle](https://i.imgur.com/3WhAxfg.png) | ![Imgur](https://i.imgur.com/E0Lbx7N.png) |
+| my incredible modeling / uv mapping skills  |
+| ------------------------------------------- |
+| ![blender](https://i.imgur.com/UCimpqc.png) |
 
-| active                                    | focused                                   |
-| ----------------------------------------- | ----------------------------------------- |
-| ![Imgur](https://i.imgur.com/xPzRRBK.png) | ![Imgur](https://i.imgur.com/mLoNWFt.png) |
+| idle                                     | open                                     |
+| ---------------------------------------- | ---------------------------------------- |
+| ![idle](https://i.imgur.com/3WhAxfg.png) | ![open](https://i.imgur.com/E0Lbx7N.png) |
+
+| active                                     | focused                                     |
+| ------------------------------------------ | ------------------------------------------- |
+| ![active](https://i.imgur.com/xPzRRBK.png) | ![focused](https://i.imgur.com/mLoNWFt.png) |
 
 ## Getting Started
 

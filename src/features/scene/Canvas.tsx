@@ -17,8 +17,6 @@ import { Environment } from './Environment';
  * The Canvas houses our artifact scene
  *
  * TODOS:
- *   - Zoom out a little on input focus
- *   - FIX flicker on texture load
  *   - Pagination controls
  *   - Add sound effect
  *   - Add wobble on corner click

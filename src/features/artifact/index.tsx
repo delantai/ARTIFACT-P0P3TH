@@ -1,7 +1,6 @@
 // Vendor
 import { useCallback, useEffect } from 'react';
 import { useSpring, easings } from '@react-spring/three';
-import { useTexture } from '@react-three/drei';
 
 // Helpers
 import { useAssetsContext } from 'src/features/open-sea/context';
@@ -19,10 +18,6 @@ export const Artifact = () => {
   const { address } = useAssetsContext();
   const prevAddress = usePrevious(address);
   const { refetch } = useAssetsQuery();
-
-  // This causes a black flicker when being called from ArtifactCorner,
-  // so for now, load it on first mount.
-  useTexture('/assets/images/placeholder.jpg');
 
   // Transitioning state scales animation on down press
   const { scale } = useSpring({

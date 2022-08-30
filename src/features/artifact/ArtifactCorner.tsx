@@ -1,10 +1,9 @@
 // Vendor
 import { throttle } from 'lodash';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { BufferGeometry } from 'three';
 import { animated, useSpring, useSpringRef, easings } from '@react-spring/three';
-import { useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 // Helpers
@@ -69,6 +68,7 @@ const getPointInSphere = (radius = 1) => {
 };
 
 export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometry, state }: Props) => {
+  const [texture, setTexture] = useState<THREE.Texture>();
   const { focusedCorner, setFocusedCorner } = useArtifactContext();
   const isFocused = focusedCorner?.id === id;
   const coordinates = getCoordinates(state, isFocused);
@@ -76,14 +76,15 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
   const springRef = useSpringRef();
   const seed = useRef(Math.random()).current;
 
-  // Load in img textures
-  const nftMap = useTexture(data?.imageUrl ?? '/assets/images/placeholder.jpg');
   useEffect(() => {
-    // Threejs horizontally flips textures manually loaded into a glb geometry
-    // TODO: position images better to handle different aspect ratios
-    nftMap.center.set(0.5, 0.5);
-    nftMap.repeat.set(-1, 1);
-  }, [nftMap]);
+    // Load in img textures, do not use useTexture in the component scope with dynamic URL's
+    new THREE.TextureLoader().load(data?.imageUrl || '/assets/images/placeholder.jpg', (map) => {
+      // Threejs horizontally flips textures manually loaded into a glb geometry
+      map.center.set(0.5, 0.5);
+      map.repeat.set(-1, 1);
+      setTexture(map);
+    });
+  }, [data]);
 
   // Throttled useFrame callback which drives idle animation for corners
   const getIdlePosition = useMemo(
@@ -137,7 +138,7 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
           <meshStandardMaterial color="orange" />
           {panelGeometry && isFocused ? (
             <animated.mesh geometry={panelGeometry} onClick={handleClick} position={PANEL_LOC[id]?.position}>
-              <meshBasicMaterial attach="material" map={nftMap} reflectivity={0} />
+              <meshBasicMaterial attach="material" map={texture} reflectivity={0} />
             </animated.mesh>
           ) : null}
         </animated.mesh>

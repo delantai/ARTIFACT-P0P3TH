@@ -17,10 +17,11 @@ const PLACHOLDER = '/assets/images/placeholder.jpg';
 const cx = classNames.bind(styles);
 
 interface Props extends Dialog.DialogContentProps {
+  open?: boolean;
   tokenId?: string;
 }
 
-export const ArtifactDialogContent = ({ tokenId, ...props }: Props) => {
+export const ArtifactDialogContent = ({ open = false, tokenId, ...props }: Props) => {
   const asset = useAsset(tokenId);
   const { setFocusedCorner } = useArtifactContext();
   const handleClose = useCallback(() => setFocusedCorner(null), [setFocusedCorner]);
@@ -28,7 +29,7 @@ export const ArtifactDialogContent = ({ tokenId, ...props }: Props) => {
   // NOTE: Dialog.Portal > Dialog.Content could be abstracted to a common component
   return (
     <Dialog.Portal>
-      <Dialog.Content className={cx('base')} onInteractOutside={handleClose} {...props}>
+      <Dialog.Content className={cx('base', { 'base--visible': open })} onInteractOutside={handleClose} {...props}>
         <div>
           <div className={cx('header-row')}>
             {asset?.imageUrl ? (
