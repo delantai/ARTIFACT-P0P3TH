@@ -9,6 +9,7 @@ import { useFrame } from '@react-three/fiber';
 import { DreiGLTF } from 'src/@types';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
 import { OpenSeaAsset } from 'src/features/open-sea/@types';
+import { useMatAlien } from 'src/utils/threejs/mats/use-mat-alien';
 import { useAnimBobbing } from 'src/utils/threejs/use-anim-bobbing';
 import { usePrevious } from 'src/utils/use-previous';
 import { TransitionState } from 'src/utils/use-transition';
@@ -72,6 +73,8 @@ export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props
   const bobbing = useAnimBobbing({ origin: CUBE_LOC.position, ref: cubeRef });
   useFrame(bobbing);
 
+  const alien = useMatAlien();
+
   // NOTE: data is mapped according to GLB file geometry so that they have the correct order
   return (
     <animated.group {...props} dispose={null} scale={scale}>
@@ -81,7 +84,8 @@ export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props
         onPointerDown={onPointerDown}
         position={CUBE_LOC.position}
         rotation={CUBE_LOC.rotation}>
-        <meshStandardMaterial color="orange" />
+        {/* <meshStandardMaterial color="orange" /> */}
+        <meshStandardMaterial {...(alien || {})} attach="material" />
       </animated.mesh>
       <ArtifactCorner
         clamp={clamp}

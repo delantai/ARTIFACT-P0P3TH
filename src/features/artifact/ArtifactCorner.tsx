@@ -8,6 +8,7 @@ import { useFrame } from '@react-three/fiber';
 
 // Helpers
 import { OpenSeaAsset } from 'src/features/open-sea/@types';
+import { useMatSimple } from 'src/utils/threejs/mats/use-mat-simple';
 import { assertUnreachable } from 'src/utils/assertions';
 
 // Module
@@ -127,6 +128,8 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
     }
   }, [data, id, setFocusedCorner, state]);
 
+  const simple = useMatSimple();
+
   return (
     // react-spring + R3F need typings to be better defined
     // https://github.com/pmndrs/react-spring/issues/1302#issuecomment-840816845
@@ -135,7 +138,8 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <animated.group position={position} rotation={rotation as any}>
         <animated.mesh geometry={geometry} onClick={handleClick}>
-          <meshStandardMaterial color="orange" />
+          {/* <meshStandardMaterial color="orange" /> */}
+          <meshStandardMaterial {...simple} attach="material" />
           {panelGeometry && isFocused ? (
             <animated.mesh geometry={panelGeometry} onClick={handleClick} position={PANEL_LOC[id]?.position}>
               <meshBasicMaterial attach="material" map={texture} reflectivity={0} />
