@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useSpring, easings } from '@react-spring/three';
 
 // Helpers
-import { useAssetsContext } from 'src/features/open-sea/context';
+import { useSearchContext } from 'src/features/open-sea/context';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
 import { useTransition, TransitionState } from 'src/utils/use-transition';
 
@@ -15,7 +15,7 @@ import { Controls } from './Controls';
 
 export const Artifact = () => {
   const { isEntering, isExiting, state, next } = useTransition();
-  const { address } = useAssetsContext();
+  const { address } = useSearchContext();
   const prevAddress = usePrevious(address);
   const { refetch } = useAssetsQuery();
 
@@ -64,7 +64,6 @@ export const Artifact = () => {
       {[TransitionState.Exited, TransitionState.Entering].includes(state) ? (
         <ArtifactSolid
           scale={scale}
-          // state={state}
           onClick={handleClickEntered}
           onPointerDown={handleEntering}
           onPointerOut={handleExited} // Back to Exited if mouse leaves (on drag)

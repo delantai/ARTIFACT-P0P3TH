@@ -6,7 +6,7 @@ import { ContactShadows, useContextBridge } from '@react-three/drei';
 // Helpers
 import { Artifact } from 'src/features/artifact';
 import { ArtifactContext } from 'src/features/artifact/context';
-import { AssetsContext } from 'src/features/open-sea/context';
+import { SearchContext } from 'src/features/open-sea/context';
 import { context as QueryContext } from 'src/utils/query-client';
 
 // Module
@@ -30,7 +30,7 @@ THREE.Cache.enabled = true;
 export const Canvas = () => {
   // Necessary since there are issues passing context between two renderers
   // https://docs.pmnd.rs/react-three-fiber/advanced/gotchas#consuming-context-from-a-foreign-provider
-  const ContextBridge = useContextBridge(ArtifactContext, AssetsContext, QueryContext);
+  const ContextBridge = useContextBridge(ArtifactContext, SearchContext, QueryContext);
 
   return (
     <FiberCanvas gl={{ logarithmicDepthBuffer: true, antialias: false }} dpr={[1, 1.5]}>

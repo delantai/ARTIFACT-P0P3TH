@@ -1,3 +1,7 @@
+export const materials = {
+  color: 'orange',
+};
+
 export interface Coordinate {
   position: [number, number, number];
   rotation: [number, number, number];

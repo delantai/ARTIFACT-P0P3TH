@@ -13,9 +13,9 @@ interface ContextParams {
   // TODO: Add pagination data
 }
 
-export const AssetsContext = createContext<ContextParams | undefined>(undefined);
+export const SearchContext = createContext<ContextParams | undefined>(undefined);
 
-export const AssetsProvider = ({ children }: PropsWithChildren<{}>) => {
+export const SearchProvider = ({ children }: PropsWithChildren<{}>) => {
   const [address, setAddress] = useState<string>();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const value = useMemo(
@@ -28,14 +28,14 @@ export const AssetsProvider = ({ children }: PropsWithChildren<{}>) => {
     [address, isInputFocused],
   );
 
-  return <AssetsContext.Provider value={value}>{children}</AssetsContext.Provider>;
+  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
 };
 
-export const useAssetsContext = () => {
-  const assetsContext = useContext(AssetsContext);
-  if (!assetsContext) {
+export const useSearchContext = () => {
+  const searchContext = useContext(SearchContext);
+  if (!searchContext) {
     // Better type safety around ContextParams defaults.
-    throw new Error('No AssetsContext.Provider found...');
+    throw new Error('No SearchContext.Provider found...');
   }
-  return assetsContext;
+  return searchContext;
 };

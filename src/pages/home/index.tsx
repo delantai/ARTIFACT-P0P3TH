@@ -15,7 +15,7 @@ import { Canvas } from 'src/features/scene/Canvas';
 
 // Helpers
 import { useArtifactContext } from 'src/features/artifact/context';
-import { useAssetsContext } from 'src/features/open-sea/context';
+import { useSearchContext } from 'src/features/open-sea/context';
 import { InvalidInputError } from 'src/features/open-sea/errors';
 import { useAssetsQuery } from 'src/features/open-sea/queries';
 
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
 
   // Fetch OpenSea API assets via owner address lookup
   // Test with: 0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19
-  const { isInputFocused, setAddress, setIsInputFocused } = useAssetsContext(); // Assets global app state
+  const { isInputFocused, setAddress, setIsInputFocused } = useSearchContext(); // Assets global app state
   const { error } = useAssetsQuery();
 
   // When search button is clicked, setAddress and execute the OpenSea assets query

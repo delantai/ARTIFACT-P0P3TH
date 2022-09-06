@@ -6,7 +6,7 @@ import { context } from 'src/utils/query-client';
 import { getUrl } from 'src/utils/url';
 
 // Module
-import { useAssetsContext } from './context';
+import { useSearchContext } from './context';
 import { InvalidInputError } from './errors';
 import { OpenSeaAssets, OpenSeaAssetsResponse } from './@types';
 
@@ -61,7 +61,7 @@ const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAsse
 };
 
 export const useAssetsQuery = () => {
-  const { address } = useAssetsContext();
+  const { address } = useSearchContext();
 
   // Fetch OpenSea API assets via owner address lookup
   return useQuery(['open-sea-assets', { address }], fetchAssets, {

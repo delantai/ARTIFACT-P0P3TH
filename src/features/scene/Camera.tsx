@@ -7,7 +7,7 @@ import { useFrame } from '@react-three/fiber';
 
 // Helpers
 import { useArtifactContext } from 'src/features/artifact/context';
-import { useAssetsContext } from 'src/features/open-sea/context';
+import { useSearchContext } from 'src/features/open-sea/context';
 
 interface Coordinate {
   position: [number, number, number];
@@ -29,7 +29,7 @@ const rotationTarget = new THREE.Quaternion();
 export const Camera = () => {
   const cameraRef = useRef<PerspectiveCameraType>(null);
   const { focusedCorner } = useArtifactContext();
-  const { isInputFocused } = useAssetsContext(); // Assets global app state
+  const { isInputFocused } = useSearchContext(); // Assets global app state
 
   // Dolly, narrow FOV, and look at artifact corner, or return home
   useFrame(() => {

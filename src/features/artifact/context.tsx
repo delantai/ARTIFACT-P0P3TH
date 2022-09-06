@@ -33,10 +33,10 @@ export const ArtifactProvider = ({ children }: PropsWithChildren<{}>) => {
 };
 
 export const useArtifactContext = () => {
-  const assetsContext = useContext(ArtifactContext);
-  if (!assetsContext) {
+  const artifactContext = useContext(ArtifactContext);
+  if (!artifactContext) {
     // Better type safety around ContextParams defaults.
     throw new Error('No ArtifactContext.Provider found...');
   }
-  return assetsContext;
+  return artifactContext;
 };

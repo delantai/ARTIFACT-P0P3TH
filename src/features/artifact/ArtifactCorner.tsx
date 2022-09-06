@@ -11,11 +11,11 @@ import { OpenSeaAsset } from 'src/features/open-sea/@types';
 import { assertUnreachable } from 'src/utils/assertions';
 
 // Module
-import { ACTIVE_LOC, CLOSED_LOC, Coordinates, FLIPPED_LOC, OPEN_LOC, PANEL_LOC } from './constants';
+import { ACTIVE_LOC, CLOSED_LOC, Coordinates, FLIPPED_LOC, materials, OPEN_LOC, PANEL_LOC } from './constants';
 import { useArtifactContext } from './context';
 
 const SPRING_CONFIG = { easing: easings.easeOutQuint, tension: 200, friction: 15, precision: 0.00001 };
-const IDLE_SPRING_CONFIG = { mass: 1, tension: 10, friction: 120, precision: 0.00001 };
+const IDLE_SPRING_CONFIG = { mass: 1, tension: 10, friction: 80, precision: 0.00001 };
 
 export const enum CornerState {
   Active = 'active',
@@ -53,15 +53,17 @@ const getCoordinates = (state: CornerState, isFlipped: boolean): Coordinates => 
 
 /**
  * Naive solution for randomly picking a point within a sphere of given radius
+ * https://en.wikipedia.org/wiki/N-sphere#Generating_random_points
  */
 const getPointInSphere = (radius = 1) => {
+  // Center around origin -0.5 to 0.5
   const x = Math.random() - 0.5;
   const y = Math.random() - 0.5;
   const z = Math.random() - 0.5;
   const mag = Math.sqrt(x * x + y * y + z * z);
 
-  // Counter-act clumping towards center
-  const d = Math.sqrt(Math.random()) * radius;
+  // Counter-act clumping towards center, scale by desired radius.
+  const d = Math.cbrt(Math.random()) * radius;
 
   // Multiply new radius by normalized random vector
   return [(x / mag) * d, (y / mag) * d, (z / mag) * d];
@@ -91,7 +93,7 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
     () =>
       throttle(() => {
         if (state !== CornerState.Closed && !isFocused) {
-          springRef.start({ config: IDLE_SPRING_CONFIG, position: getPointInSphere(1) });
+          springRef.start({ config: IDLE_SPRING_CONFIG, position: getPointInSphere(0.5) });
         }
       }, seed * 2000 + 2000), // Throttle between 2 - 4 seconds
     [isFocused, seed, springRef, state],
@@ -111,7 +113,7 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
     ref: springRef,
   });
 
-  // Idle animation repositions every 2 seconds
+  // Idle animation repositions every 2-4 seconds
   useFrame(getIdlePosition);
 
   // Clicking a corner should wobble it or flip it, depending on state
@@ -135,7 +137,7 @@ export const ArtifactCorner = ({ clamp = false, data, geometry, id, panelGeometr
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <animated.group position={position} rotation={rotation as any}>
         <animated.mesh geometry={geometry} onClick={handleClick}>
-          <meshStandardMaterial color="orange" />
+          <meshStandardMaterial {...materials} />
           {panelGeometry && isFocused ? (
             <animated.mesh geometry={panelGeometry} onClick={handleClick} position={PANEL_LOC[id]?.position}>
               <meshBasicMaterial attach="material" map={texture} reflectivity={0} />

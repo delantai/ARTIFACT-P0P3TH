@@ -14,7 +14,7 @@ import { usePrevious } from 'src/utils/use-previous';
 import { TransitionState } from 'src/utils/use-transition';
 
 // Module
-import { CUBE_LOC } from './constants';
+import { CUBE_LOC, materials } from './constants';
 import { ArtifactCorner, CornerState } from './ArtifactCorner';
 
 const ASSET_PATH = '/assets/threejs/artifact-split.glb';
@@ -81,7 +81,7 @@ export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props
         onPointerDown={onPointerDown}
         position={CUBE_LOC.position}
         rotation={CUBE_LOC.rotation}>
-        <meshStandardMaterial color="orange" />
+        <meshStandardMaterial {...materials} />
       </animated.mesh>
       <ArtifactCorner
         clamp={clamp}

@@ -10,7 +10,7 @@ import { useAnimBobbing } from 'src/utils/threejs/use-anim-bobbing';
 import { DreiGLTF } from 'src/@types';
 
 // Module
-import { CUBE_LOC } from './constants';
+import { CUBE_LOC, materials } from './constants';
 
 const ASSET_PATH = '/assets/threejs/artifact-solid.glb';
 
@@ -27,7 +27,7 @@ export const ArtifactSolid = ({ ...props }: Props) => {
   return (
     <animated.group {...props} dispose={null}>
       <mesh geometry={nodes.Cube.geometry} position={CUBE_LOC.position} ref={cubeRef} rotation={CUBE_LOC.rotation}>
-        <meshStandardMaterial color="orange" />
+        <meshStandardMaterial {...materials} />
       </mesh>
     </animated.group>
   );
