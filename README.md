@@ -4,9 +4,9 @@ A recent deep dive into the metaverse has produced a new artifact (SN: P0P3TH). 
 
 https://artifact-p0p3th.vercel.app/
 
-(test address: `0xB35eC98Ba0A1Cf6b5C1d836A818D041A7CD9AA19`)
+(try: `0x6b247f038d3224A2413C231790B6C26F7C7E0Cff`)
 
-Currently awaiting approval from OpenSea, so for now only Rinkeby API Testnets addresses work.
+NOTE: Currently we're using the `production` OpenSea API, which is rate-limited because we have not been granted an api key.
 
 This project presented me the opportunity to explore something I've been curious about for a while: building an interactive 3D asset within a simple web app. I was impressed with the [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) library, and ended up learning about some of the capabilities of WebGL + ThreeJS + Fiber through this experiment. Hope you enjoy!
 

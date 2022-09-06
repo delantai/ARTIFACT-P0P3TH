@@ -12,10 +12,7 @@ import styles from './SearchInput.module.scss';
 
 const cx = classNames.bind(styles);
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  // Active state should be used when input has focus
-  active: boolean;
-}
+type Props = InputHTMLAttributes<HTMLInputElement>;
 
 export const SearchInput = ({ className, onBlur, onChange, onFocus, ...props }: Props) => {
   const [isActive, setIsActive] = useState(false);

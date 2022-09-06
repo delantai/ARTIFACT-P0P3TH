@@ -24,13 +24,6 @@ export interface OpenSeaAsset {
 
 export interface OpenSeaAssets {
   assets: OpenSeaAsset[];
-}
-
-export type OpenSeaAssetResponse = Pick<OpenSeaAsset, 'collection' | 'description' | 'name'> & {
-  token_id: string;
-  image_url: string | null;
-};
-
-export interface OpenSeaAssetsResponse {
-  assets: OpenSeaAssetResponse[];
+  next: string | null;
+  previous: string | null;
 }

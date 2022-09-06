@@ -25,7 +25,7 @@ export const ArtifactSolid = ({ ...props }: Props) => {
   useFrame(bobbing);
 
   return (
-    <animated.group {...props} dispose={null}>
+    <animated.group {...props}>
       <mesh geometry={nodes.Cube.geometry} position={CUBE_LOC.position} ref={cubeRef} rotation={CUBE_LOC.rotation}>
         <meshStandardMaterial {...materials} />
       </mesh>

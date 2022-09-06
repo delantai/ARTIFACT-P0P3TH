@@ -1,9 +1,10 @@
 // Vendor
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { animated } from '@react-spring/three';
+import { animated, easings, useSpring, useSpringRef } from '@react-spring/three';
 import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useGesture } from '@use-gesture/react';
 
 // Helpers
 import { DreiGLTF } from 'src/@types';
@@ -18,6 +19,8 @@ import { CUBE_LOC, materials } from './constants';
 import { ArtifactCorner, CornerState } from './ArtifactCorner';
 
 const ASSET_PATH = '/assets/threejs/artifact-split.glb';
+const DRAG_LIMIT = 800;
+const DRAG_SPRING_CONFIG = { easing: easings.easeOutQuint, mass: 1, tension: 200, friction: 8, precision: 0.00001 };
 
 type Props = ComponentProps<typeof animated.group> & {
   onExiting?: () => void;
@@ -36,15 +39,21 @@ const makeGetCornerState = (isActive: boolean, isOpen: boolean) => (data?: OpenS
 };
 
 export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props }: Props) => {
+  const isRefetching = useRef<boolean>(false);
   const cubeRef = useRef<THREE.Mesh<THREE.BufferGeometry>>(null);
+  const { gl } = useThree(); // Observe drag gestures on entire canvas
   const { nodes } = useGLTF(ASSET_PATH) as DreiGLTF;
   const [clamp, setClamp] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const prevState = usePrevious(state);
 
-  const { data } = useAssetsQuery();
+  const { data, fetchNextPage, fetchPreviousPage, isFetching } = useAssetsQuery();
   const getCornerState = makeGetCornerState(isActive, isOpen);
+
+  // Dragging reduces cube geometry scale until threshold is reached
+  const springRef = useSpringRef();
+  const { scale: dragScale } = useSpring({ scale: 1, config: DRAG_SPRING_CONFIG, ref: springRef });
 
   // 1. On mount animate to open state
   useEffect(() => {
@@ -72,15 +81,60 @@ export const ArtifactSplit = ({ onExiting, onPointerDown, scale, state, ...props
   const bobbing = useAnimBobbing({ origin: CUBE_LOC.position, ref: cubeRef });
   useFrame(bobbing);
 
+  // 5. Handle pagination on drag
+  useGesture(
+    {
+      onDrag: ({ movement: [mx] }) => {
+        if (!isActive) {
+          return;
+        }
+
+        // Give visual indicator of drag limit to trigger pagination
+        if (Math.abs(mx) < DRAG_LIMIT) {
+          // Scales between 1 to 0.5 as you increase drag towards limit
+          springRef.start({ scale: 1 - (Math.abs(mx) / DRAG_LIMIT) * 0.5, config: DRAG_SPRING_CONFIG });
+        } else {
+          // Sufficient drag reached, return to regular scale
+          springRef.start({ scale: 1, config: DRAG_SPRING_CONFIG });
+          if (!isFetching && !isRefetching.current) {
+            // Do this just once, the first time we hit DRAG_LIMIT
+            // Give time for animation to occur
+            isRefetching.current = true;
+            if (mx < 0) {
+              setTimeout(() => fetchNextPage(), 750);
+            } else {
+              setTimeout(() => fetchPreviousPage(), 750);
+            }
+            setIsActive(false);
+          }
+        }
+      },
+      onDragEnd: () => {
+        // Return to regular scale, in case we release drag before hitting limit
+        springRef.start({ scale: 1, config: DRAG_SPRING_CONFIG });
+
+        if (isRefetching.current) {
+          isRefetching.current = false; // Reset
+          if (data?.assets.length) {
+            // In case we drag without a next/previous page
+            setIsActive(true);
+          }
+        }
+      },
+    },
+    { target: gl.domElement },
+  );
+
   // NOTE: data is mapped according to GLB file geometry so that they have the correct order
   return (
-    <animated.group {...props} dispose={null} scale={scale}>
+    <animated.group {...props} scale={scale}>
       <animated.mesh
         ref={cubeRef}
         geometry={nodes.Cube.geometry}
         onPointerDown={onPointerDown}
         position={CUBE_LOC.position}
-        rotation={CUBE_LOC.rotation}>
+        rotation={CUBE_LOC.rotation}
+        scale={dragScale}>
         <meshStandardMaterial {...materials} />
       </animated.mesh>
       <ArtifactCorner

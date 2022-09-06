@@ -4,7 +4,6 @@ import { useSpring, easings } from '@react-spring/three';
 
 // Helpers
 import { useSearchContext } from 'src/features/open-sea/context';
-import { useAssetsQuery } from 'src/features/open-sea/queries';
 import { useTransition, TransitionState } from 'src/utils/use-transition';
 
 // Module
@@ -17,7 +16,6 @@ export const Artifact = () => {
   const { isEntering, isExiting, state, next } = useTransition();
   const { address } = useSearchContext();
   const prevAddress = usePrevious(address);
-  const { refetch } = useAssetsQuery();
 
   // Transitioning state scales animation on down press
   const { scale } = useSpring({
@@ -49,12 +47,7 @@ export const Artifact = () => {
   );
 
   // Kick off search animation when clicked
-  const handleClickEntered = useCallback(() => {
-    if (address) {
-      refetch();
-    }
-    next(TransitionState.Entered);
-  }, [address, next, refetch]);
+  const handleToEntered = useCallback(() => next(TransitionState.Entered), [next]);
 
   // Transition back to cube state after closing animations finish
   const handleToExited = useCallback(() => next(TransitionState.Exited), [next]);
@@ -64,7 +57,7 @@ export const Artifact = () => {
       {[TransitionState.Exited, TransitionState.Entering].includes(state) ? (
         <ArtifactSolid
           scale={scale}
-          onClick={handleClickEntered}
+          onClick={handleToEntered}
           onPointerDown={handleEntering}
           onPointerOut={handleExited} // Back to Exited if mouse leaves (on drag)
         />

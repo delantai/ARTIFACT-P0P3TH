@@ -17,6 +17,10 @@ import { Environment } from './Environment';
 // Enable THREE cache for textures
 THREE.Cache.enabled = true;
 
+interface Props {
+  className?: string;
+}
+
 /**
  * The Canvas houses our artifact scene
  *
@@ -27,13 +31,13 @@ THREE.Cache.enabled = true;
  *   - Env particle effects
  *   - Animated shader for frosted glass cube with glow
  */
-export const Canvas = () => {
+export const Canvas = ({ className }: Props) => {
   // Necessary since there are issues passing context between two renderers
   // https://docs.pmnd.rs/react-three-fiber/advanced/gotchas#consuming-context-from-a-foreign-provider
   const ContextBridge = useContextBridge(ArtifactContext, SearchContext, QueryContext);
 
   return (
-    <FiberCanvas gl={{ logarithmicDepthBuffer: true, antialias: false }} dpr={[1, 1.5]}>
+    <FiberCanvas className={className} gl={{ logarithmicDepthBuffer: true, antialias: false }} dpr={[1, 1.5]}>
       <ContextBridge>
         <color attach="background" args={['#12181d']} />
         <Artifact />

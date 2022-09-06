@@ -4,28 +4,34 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 interface ContextParams {
   // Address of ETH owner currently being queried
   address?: string;
+  // Current page cursor
+  cursor?: string;
   // Search bar focus state
   isInputFocused: boolean;
   // Set address value
   setAddress: Dispatch<SetStateAction<string | undefined>>;
+  // Set cursor value
+  setCursor: Dispatch<SetStateAction<string | undefined>>;
   // Set search bar focus state
   setIsInputFocused: Dispatch<SetStateAction<boolean>>;
-  // TODO: Add pagination data
 }
 
 export const SearchContext = createContext<ContextParams | undefined>(undefined);
 
 export const SearchProvider = ({ children }: PropsWithChildren<{}>) => {
   const [address, setAddress] = useState<string>();
+  const [cursor, setCursor] = useState<string>();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const value = useMemo(
     () => ({
       address,
+      cursor,
       isInputFocused,
       setAddress,
+      setCursor,
       setIsInputFocused,
     }),
-    [address, isInputFocused],
+    [address, cursor, isInputFocused],
   );
 
   return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;

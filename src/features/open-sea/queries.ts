@@ -1,4 +1,6 @@
 // Vendor
+import camelize from 'camelcase-keys';
+import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 // Helpers
@@ -8,16 +10,15 @@ import { getUrl } from 'src/utils/url';
 // Module
 import { useSearchContext } from './context';
 import { InvalidInputError } from './errors';
-import { OpenSeaAssets, OpenSeaAssetsResponse } from './@types';
+import { OpenSeaAssets } from './@types';
 
-const isAssetsResponse = (data: unknown): data is OpenSeaAssetsResponse =>
-  typeof data === 'object' &&
-  data !== null &&
-  'assets' in data &&
-  Array.isArray((data as OpenSeaAssetsResponse).assets);
+const LIMIT = 8;
+
+const isAssetsResponse = (data: unknown): data is OpenSeaAssets =>
+  typeof data === 'object' && data !== null && 'assets' in data && Array.isArray((data as OpenSeaAssets).assets);
 
 interface FetchAssetsParams {
-  queryKey: [string, { address?: string }];
+  queryKey: [string, { address?: string; cursor?: string }];
 }
 
 /**
@@ -28,13 +29,14 @@ const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAsse
     return null;
   }
 
-  const url = getUrl('https://testnets-api.opensea.io/api/v1/assets', {
-    owner: queryKey[1].address,
-    offset: 0,
-    limit: 20,
+  const { address, cursor } = queryKey[1];
+  const url = getUrl('https://api.opensea.io/api/v1/assets', {
+    owner: address,
+    limit: LIMIT,
+    ...(cursor ? { cursor } : {}),
   });
   const response = await fetch(url.href);
-  const data = await response.json();
+  const data = camelize((await response.json()) ?? {}, { deep: true });
 
   if (!response.ok) {
     // When a malformed address is used, response returns { owner: [errorMsg] }
@@ -50,25 +52,38 @@ const fetchAssets = async ({ queryKey }: FetchAssetsParams): Promise<OpenSeaAsse
     throw new Error('Unexpected response...');
   }
 
-  return {
-    ...data,
-    assets: data.assets.map((asset) => ({
-      ...asset,
-      imageUrl: asset.image_url,
-      tokenId: asset.token_id,
-    })),
-  };
+  return data;
 };
 
 export const useAssetsQuery = () => {
-  const { address } = useSearchContext();
+  const { address, cursor, setCursor } = useSearchContext();
 
   // Fetch OpenSea API assets via owner address lookup
-  return useQuery(['open-sea-assets', { address }], fetchAssets, {
+  const result = useQuery(['open-sea-assets', { address, cursor }], fetchAssets, {
     context, // Necessary since we specify context on provider
-    enabled: false, // Fetch data only when the button is clicked
+    enabled: !!address, // Fetch data only when address exists
+    keepPreviousData: true, // When paginated data is loading, retain previous data
     retry: false, // Disable retries on failure
+    staleTime: 1000 * 60 * 60, // 60 minutes before results are considered stale
   });
+
+  const fetchNextPage = useCallback(() => {
+    if (result.data?.next) {
+      setCursor(result.data.next);
+    }
+  }, [result.data?.next, setCursor]);
+
+  const fetchPreviousPage = useCallback(() => {
+    if (result.data?.previous) {
+      setCursor(result.data.previous);
+    }
+  }, [result.data?.previous, setCursor]);
+
+  return {
+    ...result,
+    fetchNextPage,
+    fetchPreviousPage,
+  };
 };
 
 export const useAsset = (tokenId?: string) => {

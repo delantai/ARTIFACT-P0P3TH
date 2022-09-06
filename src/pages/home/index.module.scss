@@ -35,6 +35,11 @@
   align-items: center;
 }
 
+.canvas > div > canvas {
+  // Addresses touch-action warning in console
+  touch-action: none;
+}
+
 .title-container {
   // Make titles go away (after animations) so they dont block mouse events
   animation: ease-out 13s 1 hide;
