@@ -25,7 +25,7 @@ export const Artifact = () => {
 
   // When address is changed in open state, transition to closed state
   useEffect(() => {
-    if (prevAddress !== address && state === TransitionState.Entered) {
+    if (prevAddress !== address && !address && state === TransitionState.Entered) {
       next(TransitionState.Exiting);
     }
   }, [address, prevAddress, next, state]);
